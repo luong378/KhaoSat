@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+<title>Happy BirthDay</title>
+<style>
+*
+{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+-webkit-tap-highlight-color: transparent;
+}
+
+body
+{
+height: 100vh;
+background-color: #e8f4fd; /* Đổi nền sang xanh nhạt */
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+position: relative;
+}
+
+.music-controls {
+position: fixed;
+top: 20px;
+right: 20px;
+display: flex;
+flex-direction: column;
+align-items: center;
+z-index: 100;
+}
+
+.music-toggle {
+width: 50px;
+height: 50px;
+border-radius: 50%;
+background-color: #2196f3; /* Đổi nút nhạc sang xanh dương */
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+transition: all 0.3s ease;
+border: 2px solid #64b5f6;
+margin-bottom: 5px;
+}
+
+.music-toggle:hover {
+transform: scale(1.1);
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.music-toggle i {
+color: white;
+font-size: 24px;
+}
+
+.music-toggle.playing {
+background-color: #1976d2;
+border: 3px solid white;
+}
+
+.music-label {
+font-family: "Varela Round", sans-serif;
+color: #2196f3; /* Đổi màu chữ nhãn music */
+font-size: 14px;
+font-weight: 600;
+text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+
+.evelope {
+position: relative;
+z-index: 1;
+top: -5px;
+}
+.evelope::before {
+content: "";
+position: absolute;
+height: 300px;
+width: 300px;
+background-color: #4ea8de; /* Đổi màu nắp phong bì sang xanh */
+top: -135px;
+left: 50px;
+rotate: 45deg;
+border-radius: 28px;
+box-shadow: 5px 5px 15px rgba(46, 42, 42, 0.4);
+}
+.container
+{
+position: relative;
+top: 18%;
+animation: float 3s ease-in-out infinite;
+width: 90%;
+max-width: 420px;
+}
+
+@keyframes float {
+0%, 100% {
+transform: translateY(0);
+}
+50% {
+transform: translateY(-16px);
+}
+}
+
+.card-hb
+{
+position: relative;
+height: 250px;
+width: 100%;
+max-width: 400px;
+background-color: #2196f3; /* Đổi thân phong bì sang xanh */
+border-radius: 10px 10px 20px 20px;
+box-shadow: 0 10px 25px rgba(46, 42, 42, 0.5);
+pointer-events: auto;
+transition: transform 0.4s ease, box-shadow 0.4s ease;
+margin: 0 auto;
+}
+
+.card-hb:hover {
+transform: translateY(-25px);
+box-shadow: 0 15px 35px rgba(46, 42, 42, 0.6);
+animation-play-state: paused;
+}
+
+.card-hb:hover .card {
+transform: translateY(-160px);
+box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25), inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-hb.disabled-hover:hover {
+transform: none;
+box-shadow: 0 10px 25px rgba(46, 42, 42, 0.5);
+}
+
+.card-hb.disabled-hover:hover .card {
+transform: none;
+box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-hb::before {
+content: "";
+position: absolute;
+height: 300px;
+width: 298px;
+background-color: #4ea8de; /* Đổi màu góc phong bì sang xanh */
+top: -135px;
+left: 51px;
+rotate: 225deg;
+pointer-events: auto;
+border-radius: 28px;
+box-shadow: 5px 5px 15px rgba(46, 42, 42, 0.4);
+}
+
+.hide {
+position: absolute;
+height: 250px;
+width: 420px;
+top: -250px;
+left: -10px;
+background-color: #e8f4fd; /* Khớp với màu nền mới */
+z-index:2;
+}
+
+.open {
+position: absolute;
+width: 25px;
+height: 40px;
+top: 55%;
+left: 45%;
+background-color: #ffffff;
+transform: rotate(-45deg);
+border-top-left-radius: 15px;
+border-top-right-radius: 15px;
+z-index: 3;
+cursor: pointer;
+transition: transform 0.3s ease;
+}
+
+.open:hover {
+transform: rotate(-45deg) scale(1.1);
+}
+
+.open::before {
+content: "";
+position: absolute;
+width: 25px;
+height: 40px;
+left: 8px;
+top: 8px;
+background-color: #ffffff;
+transform: rotate(90deg);
+border-top-left-radius: 15px;
+border-top-right-radius: 15px;
+z-index: 3;
+}
+
+.card
+{
+position: absolute;
+height: 230px;
+width: 370px;
+background-color: rgb(255, 255, 255);
+border-radius: 8px;
+top: -0px;
+left: 14px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 20px;
+text-align: center;
+box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+transition: transform 0.4s ease, box-shadow 0.4s ease;
+pointer-events: auto;
+cursor: pointer;
+}
+
+.text {
+font-size: 40px;
+color: #1976d2; /* Đổi màu chữ tiêu đề chính sang xanh đậm */
+font-family: 'Brush Script MT', cursive;
+font-weight: bold;
+margin-bottom: 10px;
+text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.gift-i {
+font-size: 16px;
+color: #666;
+line-height: 1.5;
+font-family: "Varela Round", sans-serif;
+height: 30px;
+}
+
+.out {
+position: absolute;
+border-right: 200px #90caf9 solid; /* Đổi màu mặt nắp phong bì sang xanh nhạt hơn */
+border-bottom: 125px solid transparent;
+border-top: 120px solid transparent;
+top: 7px;
+left: 200px;
+border-radius: 0 0 20px 20px;
+}
+.out::before {
+content: "";
+position: absolute;
+border-left: 408px #4ea8de solid;
+border-top: 245px solid transparent;
+left: -200px;
+top: -120px;
+border-radius: 0px 0 32px 20px;
+}
+</style>
+</head>
+<body>
+<div class="music-controls">
+<div class="music-toggle" id="musicToggle">
+<i class="fas fa-volume-mute"></i>
+</div>
+<div class="music-label">Music</div>
+</div>
+
+<audio id="audioPlayer" loop autoplay>
+<source src="https://files.catbox.moe/lyqgv8.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+<div class="card-hb disabled-hover">
+<div class="hide"></div>
+<div class="evelope"></div>
+<div class="open"></div>
+<div class="card">
+<div class="a-i">
+<h1 class="text">Happy BirthDay</h1>
+<div class="gift-i"></div>
+</div>
+</div>
+<div class="out"></div>
+</div>
+</div>
+
+<script>
+const evelope=document.querySelector('.evelope');
+const hide=document.querySelector('.hide');
+const cardHb=document.querySelector('.card-hb');
+const open=document.querySelector('.open');
+const giftI = document.querySelector('.gift-i');
+const musicToggle = document.getElementById('musicToggle');
+const audioPlayer = document.getElementById('audioPlayer');
+let envelopeVisible=true;
+let typingAnimation = null;
+let isTyping = false;
+let hasStartedTyping = false;
+let isPlaying = false;
+let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+// Fix for iOS audio
+document.addEventListener('DOMContentLoaded', function() {
+// iOS requires user interaction to play audio
+if (isMobile) {
+// Create a one-time event listener for the first user interaction
+const enableAudio = function() {
+audioPlayer.play().then(() => {
+audioPlayer.pause();
+}).catch(e => console.log("Audio preload failed:", e));
+
+// Remove event listeners after first interaction
+document.removeEventListener('touchstart', enableAudio);
+document.removeEventListener('click', enableAudio);
+};
+
+document.addEventListener('touchstart', enableAudio);
+document.addEventListener('click', enableAudio);
+}
+});
+
+musicToggle.addEventListener('click', function() {
+if (isPlaying) {
+audioPlayer.pause();
+musicToggle.classList.remove('playing');
+musicToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+} else {
+audioPlayer.play().catch(function(error) {
+console.error("Error playing audio:", error);
+});
+musicToggle.classList.add('playing');
+musicToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+}
+isPlaying = !isPlaying;
+});
+
+audioPlayer.addEventListener('ended', function() {
+audioPlayer.play();
+});
+
+audioPlayer.addEventListener('error', function(e) {
+console.error("Audio error:", e);
+});
+
+const message = "Lương hy vọng bạn Quỳnh sẽ có những năm tháng đầy vui vẻ, hạnh phúc, chúc bạn pass các học phần suôn sẻ, sớm thành công trên con đường đã chọn. ";
+
+function typeWriter(text, element, speed = 50) {
+if (isTyping || hasStartedTyping) return;
+
+isTyping = true;
+hasStartedTyping = true;
+element.innerHTML = '';
+let i = 0;
+
+typingAnimation = setInterval(() => {
+if (i < text.length) {
+element.innerHTML += text.charAt(i);
+i++;
+} else {
+clearInterval(typingAnimation);
+isTyping = false;
+}
+}, speed);
+}
+
+function resetTypingEffect() {
+if (typingAnimation) {
+clearInterval(typingAnimation);
+isTyping = false;
+}
+hasStartedTyping = false;
+giftI.innerHTML = '';
+}
+
+function startTypingOnOpen() {
+setTimeout(() => {
+if (!hasStartedTyping) {
+typeWriter(message, giftI);
+}
+}, 500);
+}
+
+// For desktop
+cardHb.addEventListener('mouseenter', () => {
+if (!cardHb.classList.contains('disabled-hover') && !hasStartedTyping) {
+typeWriter(message, giftI);
+}
+});
+
+// For mobile - use touch events
+if (isMobile) {
+cardHb.addEventListener('touchstart', (e) => {
+if (!cardHb.classList.contains('disabled-hover') && !hasStartedTyping) {
+typeWriter(message, giftI);
+}
+});
+}
+
+evelope.addEventListener('click', e => {
+e.stopPropagation();
+evelope.style.display='none';
+hide.style.display='none';
+open.style.display='none';
+envelopeVisible=false;
+cardHb.classList.remove('disabled-hover');
+resetTypingEffect();
+startTypingOnOpen();
+});
+
+open.addEventListener('click', e => {
+e.stopPropagation();
+evelope.style.display='none';
+hide.style.display='none';
+open.style.display='none';
+envelopeVisible=false;
+cardHb.classList.remove('disabled-hover');
+resetTypingEffect();
+startTypingOnOpen();
+});
+
+cardHb.addEventListener('click', e => {
+if(!envelopeVisible){
+e.stopPropagation();
+evelope.style.display='block';
+hide.style.display='block';
+open.style.display='flex';
+envelopeVisible=true;
+cardHb.classList.add('disabled-hover');
+resetTypingEffect();
+}
+});
+
+document.querySelector('.card').addEventListener('click', e => {
+e.stopPropagation();
+});
+</script>
+</body>
+</html>
